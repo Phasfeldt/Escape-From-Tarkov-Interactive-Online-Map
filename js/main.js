@@ -240,9 +240,103 @@ $(function() {
 
         return Arrow;
     }());
+	
+	var Line = (function() {
+        function Line(canvas) {
+            this.canvas = canvas;
+            this.className = 'Line';
+            this.isDrawing = false;
+            this.isActive = false;
+            this.bindEvents();
+        }
+
+        Line.prototype.bindEvents = function() {
+            let inst = this;
+            inst.canvas.on('mouse:down', function(o) {
+                if (inst.isActive) inst.onMouseDown(o);
+            });
+            inst.canvas.on('mouse:move', function(o) {
+                if (inst.isActive) inst.onMouseMove(o);
+            });
+            inst.canvas.on('mouse:up', function(o) {
+                if (inst.isActive) inst.onMouseUp(o);
+            });
+            inst.canvas.on('object:moving', function(o) {
+                if (inst.isActive) inst.disable();
+            })
+        };
+
+        Line.prototype.onMouseUp = function(o) {
+            let inst = this;
+            if (inst.isEnable()) canvas.fire('object:finish', { target: inst.canvas.getActiveObject() });
+            inst.disable();
+        };
+
+        Line.prototype.onMouseMove = function(o) {
+            let inst = this;
+            if (!inst.isEnable()) {
+                return;
+            }
+
+            let pointer = inst.canvas.getPointer(o.e);
+            let activeObj = inst.canvas.getActiveObject();
+
+            activeObj.set({
+                x2: pointer.x,
+                y2: pointer.y
+            });
+
+            activeObj.setCoords();
+            inst.canvas.renderAll();
+        };
+
+        Line.prototype.onMouseDown = function(o) {
+            let inst = this;
+            inst.enable();
+
+            let pointer = inst.canvas.getPointer(o.e);
+            let points = [pointer.x, pointer.y, pointer.x, pointer.y];
+            let line = new fabric.Line(points, {
+                strokeWidth: parseInt(drawingLineWidth.val()),
+                fill: drawingColor.val(),
+                stroke: drawingColor.val(),
+                originX: 'center',
+                originY: 'center',
+                hasBorders: false,
+                hasControls: false,
+                lockMovementX: true,
+                lockMovementY: true
+            });
+
+            inst.canvas.add(line).setActiveObject(line);
+        };
+
+        Line.prototype.isEnable = function() {
+            return this.isDrawing;
+        };
+
+        Line.prototype.enable = function() {
+            this.isDrawing = true;
+        };
+
+        Line.prototype.disable = function() {
+            this.isDrawing = false;
+        };
+
+        Line.prototype.active = function () {
+            this.isActive = true;
+        };
+
+        Line.prototype.desactive = function () {
+            this.isActive = false;
+        };
+
+        return Line;
+    }());
 
     let c = new Circle(canvas),
         a = new Arrow(canvas);
+        b = new Line(canvas);
 
     canvas.freeDrawingBrush.color = drawingColor.val();
     canvas.freeDrawingBrush.width = parseInt(drawingLineWidth.val(), 10) || 1;
@@ -285,12 +379,21 @@ $(function() {
         canvas.isDrawingMode = false;
         c.active();
         a.desactive();
+        b.desactive();
     });
 
     $("#arrow-drawing").on('click', function () {
         canvas.isDrawingMode = false;
         a.active();
         c.desactive();
+        b.desactive();
+    });
+
+    $("#line-drawings").on('click', function () {
+        canvas.isDrawingMode = false;
+        b.active();
+        c.desactive();
+        a.desactive();
     });
 
     function setBackground(backgroundImage) {
