@@ -1,12 +1,12 @@
 $(function() {
 
     let config = {
-        apiKey: "AIzaSyCGzj1b5RXX_H0CUQe-CxluSKK4_B8L8zk",
-        authDomain: "tarkov-interactive-map.firebaseapp.com",
-        databaseURL: "https://tarkov-interactive-map.firebaseio.com",
-        projectId: "tarkov-interactive-map",
-        storageBucket: "",
-        messagingSenderId: "154243994182"
+    apiKey: "AIzaSyCoQ4kYdX_ybgs9D8nZfitRMXatb4tJ9dw",
+    authDomain: "valorantmap.firebaseapp.com",
+    databaseURL: "https://valorantmap.firebaseio.com",
+    projectId: "valorantmap",
+    storageBucket: "valorantmap.appspot.com",
+    messagingSenderId: "973286272201",
     };
 
     firebase.initializeApp(config);

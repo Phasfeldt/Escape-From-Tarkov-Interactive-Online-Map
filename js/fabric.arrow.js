@@ -22,14 +22,14 @@ fabric.Arrow = fabric.util.createClass(fabric.Line, {
         let yDiff = this.y2 - this.y1;
         let angle = Math.atan2(yDiff, xDiff);
         ctx.translate((this.x2 - this.x1) / 2, (this.y2 - this.y1) / 2);
-        ctx.rotate(angle);
+        //ctx.rotate(angle);
         ctx.beginPath();
         ctx.moveTo(20, 0);
         ctx.lineTo(-2, 10);
         ctx.lineTo(-2, -10);
         ctx.closePath();
-        ctx.fillStyle = this.stroke;
-        ctx.fill();
+        //ctx.fillStyle = this.stroke;
+        //ctx.fill();
 
         ctx.restore();
     }
